@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import * as mockAuth from '../services/mockAuth'
+import * as api from '../services/api'
 
 const AuthContext = createContext(null)
 
@@ -14,23 +14,28 @@ export function AuthProvider({ children }){
   },[])
 
   async function login({ email, password }){
-    const res = await mockAuth.login({ email, password })
-    setUser(res.user)
-    localStorage.setItem('auth.user', JSON.stringify(res.user))
-    localStorage.setItem('auth.token', res.token)
+    const res = await api.login({ email, password })
+    // res: { access_token, refresh_token, user }
+    if(res?.user){
+      setUser(res.user)
+      localStorage.setItem('auth.user', JSON.stringify(res.user))
+    }
+    if(res?.access_token) localStorage.setItem('auth.token', res.access_token)
     return res
   }
 
   async function signup({ name, email, password }){
-    const res = await mockAuth.signup({ name, email, password })
-    setUser(res.user)
-    localStorage.setItem('auth.user', JSON.stringify(res.user))
-    localStorage.setItem('auth.token', res.token)
+    const res = await api.signup({ name, email, password })
+    // backend may not return a token until email verified; set user if provided
+    if(res?.user){
+      setUser(res.user)
+      localStorage.setItem('auth.user', JSON.stringify(res.user))
+    }
     return res
   }
 
   async function resetPassword({ email }){
-    const res = await mockAuth.resetPassword({ email })
+    const res = await api.forgotPassword({ email })
     return res
   }
 
