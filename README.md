@@ -29,6 +29,9 @@ Interview notes & talking points
 - Test plan & demo: Run locally with `npm run dev`, verify flows: sign up -> email verification (backend), login -> access dashboard, forgot password flow. Provide Postman/Paw collection to test backend endpoints directly.
 - Deployment notes: Set `VITE_API_BASE` in Vercel to your Render backend URL; ensure backend CORS allows the Vercel origin and local dev origin.
 
+Vercel SPA routing fix
+- If your app shows a Vercel 404 on refresh or visiting deep links (e.g. `/login`), add a `vercel.json` with a rewrite to `index.html`. This repository includes `vercel.json` which rewrites all non-static routes to `/index.html` so client-side routing works after refresh.
+- After pushing `vercel.json`, redeploy the Vercel project. If you still see the Vercel 404, try clearing the deployment cache or trigger a manual redeploy.
 Optional follow-ups I can add before your interview:
 - Swap token storage to secure cookies and add refresh-token handling in `AuthContext`.
 - Add E2E smoke tests (Cypress/Playwright) to show passing scenarios.
