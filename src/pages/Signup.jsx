@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import { useNavigate } from 'react-router-dom'
 
 export default function Signup(){
@@ -12,6 +13,7 @@ export default function Signup(){
   const [showPassword, setShowPassword] = useState(false)
   const auth = useAuth()
   const navigate = useNavigate()
+  const toast = useToast()
 
   function passwordStrength(pw){
     let score = 0
@@ -32,6 +34,7 @@ export default function Signup(){
     if(password.length < 8){ setFormError('Password must be at least 8 characters'); setLoading(false); return }
     try{
       await auth.signup({ name, email, password })
+      toast.success('Account created — check your email to verify')
       navigate('/dashboard')
     }catch(err){ setError(err.message) }
     setLoading(false)
@@ -71,7 +74,12 @@ export default function Signup(){
           </div>
           {formError && <div id="signup-error" role="alert" className="text-sm text-red-600">{formError}</div>}
           {error && <div role="alert" className="text-sm text-red-600">{error}</div>}
-          <button disabled={loading} className="w-full bg-sky-500 text-white py-2 rounded">{loading? 'Creating...' : 'Create account'}</button>
+          <button disabled={loading} className="w-full bg-sky-500 text-white py-2 rounded flex items-center justify-center">
+            {loading ? (
+              <svg className="animate-spin h-5 w-5 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
+            ) : null}
+            {loading? 'Creating...' : 'Create account'}
+          </button>
         </form>
       </div>
     </div>
