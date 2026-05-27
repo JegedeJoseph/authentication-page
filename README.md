@@ -32,6 +32,9 @@ Interview notes & talking points
 Vercel SPA routing fix
 - If your app shows a Vercel 404 on refresh or visiting deep links (e.g. `/login`), add a `vercel.json` with a rewrite to `index.html`. This repository includes `vercel.json` which rewrites all non-static routes to `/index.html` so client-side routing works after refresh.
 - After pushing `vercel.json`, redeploy the Vercel project. If you still see the Vercel 404, try clearing the deployment cache or trigger a manual redeploy.
+
+Render backend URL
+- Backend Render URL example provided by the backend engineer: `https://authentication-page-oxqc.onrender.com`. Set `VITE_API_BASE` to this URL in your local `.env` and in Vercel environment variables.
 Optional follow-ups I can add before your interview:
 - Swap token storage to secure cookies and add refresh-token handling in `AuthContext`.
 - Add E2E smoke tests (Cypress/Playwright) to show passing scenarios.
