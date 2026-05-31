@@ -7,10 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Determine the frontend origin. Vercel may provide VERCEL_URL without a scheme
-# (e.g. "authentication-page-virid.vercel.app"). Ensure the origin includes the
-# scheme so it exactly matches the browser's `Origin` header (required when
-# `allow_credentials=True`). You can also set FRONTEND_URL explicitly in env.
 raw_frontend = os.getenv("VERCEL_URL") or os.getenv("FRONTEND_URL")
 if raw_frontend:
     FRONTEND_URL = raw_frontend if raw_frontend.startswith("http") else f"https://{raw_frontend}"
@@ -117,11 +113,6 @@ async def forgot_password(data: ForgotPassword):
 @app.post("/reset-password")
 async def reset_password(data: ResetPassword):
     
-    # NOTE TO FRONTEND ENGINEER:
-    # After Supabase redirects the user to your /reset-password page, the URL
-    # will contain an `access_token` in the fragment (#access_token=...).
-    # Your frontend must extract that token and send it in the Authorization
-    # header: `Authorization: Bearer <access_token>` when calling this endpoint.
     try:
         response = supabase.auth.update_user(
             attributes={"password": data.password}
