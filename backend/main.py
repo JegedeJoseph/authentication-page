@@ -7,7 +7,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-FRONTEND_URL = os.getenv("VERCEL_URL", "http://localhost:3000")
+# Determine the frontend origin. Vercel may provide VERCEL_URL without a scheme
+# (e.g. "authentication-page-virid.vercel.app"). Ensure the origin includes the
+# scheme so it exactly matches the browser's `Origin` header (required when
+# `allow_credentials=True`). You can also set FRONTEND_URL explicitly in env.
+raw_frontend = os.getenv("VERCEL_URL") or os.getenv("FRONTEND_URL")
+if raw_frontend:
+    FRONTEND_URL = raw_frontend if raw_frontend.startswith("http") else f"https://{raw_frontend}"
+else:
+    FRONTEND_URL = "http://localhost:3000"
 
 app = FastAPI(title="School Dev Team Backend")
 
